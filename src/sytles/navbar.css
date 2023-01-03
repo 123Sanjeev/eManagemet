@@ -1,0 +1,23 @@
+
+.dropdown{
+    color:white;
+    position: relative;
+}
+
+.dropdown>ul{
+    position: absolute;
+    left:5px;
+    top:40px;
+    display: none;
+    width: 150px;
+}
+
+.dropdown:hover ul{
+    display: flex;
+    flex-direction: column;
+}
+.sign-in{
+    position:absolute;
+    right:50px!important;
+    top:10px;
+}
