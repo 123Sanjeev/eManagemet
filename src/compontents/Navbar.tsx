@@ -49,7 +49,7 @@ const navbarDetails = function (
 
   console.log(userData);
 
-  const ADMIN = userData?.roles.forEach((e) => {
+  const ADMIN = userData?.roles.map((e) => {
     console.log(e);
     if (e.role === "ADMIN") {
       return (
