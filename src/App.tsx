@@ -4,7 +4,6 @@ import Navbar from './compontents/Navbar';
 
 const uid = sessionStorage.getItem("userid")
 
-
 function App() {
 
   useEffect(()=>{

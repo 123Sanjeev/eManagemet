@@ -1,5 +1,6 @@
 import { ReactNode, useState } from "react";
-const backendURL = process.env.REACT_APP_EXTERNAL_API;
+import { backendURL } from "./globals/global_variable";
+
 type blueprintType = {
   blueprintid: number;
   masterCourseName: string;

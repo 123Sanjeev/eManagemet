@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { backendURL } from "../globals/global_variable";
 
 export type nav = {
   MenuName: string;
@@ -17,7 +18,7 @@ export default function ManageLinks() {
 
   async function loadJSONData() {
     const response = await fetch(
-      "http://localhost:8080/eManagement/navbar/navlist"
+       `${backendURL}/navbar/navlist`
     );
     const data = await response.json();
     var navlistArray: nav[] = [];

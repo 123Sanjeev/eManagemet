@@ -12,13 +12,12 @@ import {
 } from "mdb-react-ui-kit";
 import db from "../../api/dbqueries";
 import uuid from "react-native-uuid";
+import Notifications from "../notfication/Notifications";
+type messageType = {
+  "type" : string,
+  "message" : string
+}
 
-// type registerType = {
-//   userId: number;
-//   username: string;
-//   password: string;
-//   location: string;
-// };
 
 export default function Login(props: { setLoginStatus: any, setUserData : any}) {
   const [justifyActive, setJustifyActive] = useState("tab1");
@@ -26,7 +25,7 @@ export default function Login(props: { setLoginStatus: any, setUserData : any}) 
   const [password, setPassword] = useState("");
   const [registerNewUserId, setRegisterNewUserId] = useState(0);
   const [location, setLocation] = useState("");
-
+  const [errorCode, setErrorCode] = useState<messageType>({"type" : "" ,"message" : ""})
     const handleJustifyClick = async (value: string) => {
       if (value === justifyActive) {
         return;
@@ -38,6 +37,9 @@ export default function Login(props: { setLoginStatus: any, setUserData : any}) 
 
     return (
       <div className="container w-75">
+        {
+          (errorCode.type !== "") ? <Notifications type={errorCode.type} message={errorCode.message} /> : ""
+        }
         <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
           <MDBTabs
             pills
@@ -173,11 +175,24 @@ export default function Login(props: { setLoginStatus: any, setUserData : any}) 
         const response = await db.login(
             data as { userId: number; password: string; loginkey: string }
         );
+
+        console.log(response)
         
-        sessionStorage.setItem("userid", data.userId.toString());
-        sessionStorage.setItem("sessionkey", response.loginkey);
-        props.setLoginStatus(true);
-        props.setUserData(response);
+         if(response?.type === "error"){ 
+          debugger
+          setErrorCode({
+            "type" : response?.type,
+            "message" :response?.message
+          })
+         }else{
+          sessionStorage.setItem("userid", data.userId.toString());
+          sessionStorage.setItem("sessionkey", response.loginkey);
+          props.setLoginStatus(true);
+          props.setUserData(response);
+         }
+
+
+    
     }else{
         const registerForm = {
             userId : registerNewUserId as number,

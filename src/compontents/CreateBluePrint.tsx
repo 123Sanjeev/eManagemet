@@ -1,6 +1,7 @@
 import "../sytles/createBlueprint.css"
 import $ from 'jquery'
 import { useState } from "react";
+import { backendURL } from "./globals/global_variable";
 
 export default function CreateBluePrint(){
 
@@ -174,7 +175,7 @@ async function processSubmitForm(e:any){
       
         result =  await $.ajax({
             type : "POST",
-            url : "http://localhost:8080/eManagement/blueprint/create",
+            url :   `${backendURL}/blueprint/create`,
             data : JSON.stringify(formDataObject),
             headers :{
                 'Content-Type' : 'application/json',
