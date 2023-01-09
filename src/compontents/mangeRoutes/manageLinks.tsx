@@ -18,7 +18,7 @@ export default function ManageLinks() {
 
   async function loadJSONData() {
     const response = await fetch(
-       `${backendURL}/navbar/navlist`
+       `${backendURL}navbar/navlist`
     );
     const data = await response.json();
     var navlistArray: nav[] = [];

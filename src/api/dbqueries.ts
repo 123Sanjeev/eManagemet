@@ -21,7 +21,7 @@ class db {
 
     try {
       var loginResponse = await fetch(
-        `${backendURL}/user/login`,
+        `${backendURL}user/login`,
         {
           method: "POST",
           headers: {
@@ -51,7 +51,7 @@ class db {
 
   async register(formdata: registerType) {
     const res = await fetch(
-      `${backendURL}/user/register/${formdata.userId}`,
+      `${backendURL}user/register/${formdata.userId}`,
       {
         method: "POST",
         headers: {
@@ -64,7 +64,7 @@ class db {
     return await res.json();
   }
   async registerInit() {
-    const response = await fetch(`${this.BASE_URL}/user/register`);
+    const response = await fetch(`${backendURL}user/register`);
     return await response.text();
   }
 }

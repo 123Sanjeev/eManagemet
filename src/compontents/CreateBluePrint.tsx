@@ -175,7 +175,7 @@ async function processSubmitForm(e:any){
       
         result =  await $.ajax({
             type : "POST",
-            url :   `${backendURL}/blueprint/create`,
+            url :   `${backendURL}blueprint/create`,
             data : JSON.stringify(formDataObject),
             headers :{
                 'Content-Type' : 'application/json',

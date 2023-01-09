@@ -42,14 +42,21 @@ const appList = [
             type: "single",
           },
         ],
+      }],
+          },
+        {
+          MenuName: "Publish Set",
+    MenuUrl: "/publishSet",
+        type: "multi",
+        mutiVal: [
+          {
+            MenuName: "Testing demo",
+            MenuUrl: "/viewBlueprint",
+            type: "single",
+          },
+        ],
       },
-      {
-        MenuName: "Create Blue Print",
-        MenuUrl: "/createBlueprint",
-        type: "single",
-      },
-    ],
-  },
+
 ];
 
 export default appList;
