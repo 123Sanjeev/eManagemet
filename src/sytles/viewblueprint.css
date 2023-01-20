@@ -1,0 +1,65 @@
+.updateBlueprint{
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-gap: 10px;
+}
+#blueprintid{
+    cursor: pointer;
+}
+.marksDetails{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px;
+}
+.marksSelection{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: 100%;
+    overflow-y: scroll;
+}
+
+
+.subjectlist{
+    overflow-x:scroll;
+    width: 200px;
+}
+.subjectlist,
+.subjectlist table
+{
+    width: 100%;
+}
+.subjectlist>table>thead{
+    width: 100%;
+}
+.subjectlist table thead tr{
+    width: 100%;
+    height: 85px;
+    text-align: center;
+
+}
+.objectiveoption{
+    width: 900px;
+    overflow-x:scroll;
+}
+.objectiveoption table{
+    text-align: center;
+}
+.objectiveoption table thead tr th{
+    padding:8px;
+}
+.objectiveoption table tbody td input{
+    width: 40px;
+    text-align: center;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 2px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(27, 27, 27, .4);
+    border-radius: 2px;
+}
+::-webkit-scrollbar-track{
+    background: transparent;
+}
