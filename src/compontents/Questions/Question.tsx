@@ -9,7 +9,7 @@ export type QuestionForm = {
   category: string;
   subcategory: string;
   questiondsc: string;
-  tfanswer: string;
+  tfanswer: boolean;
   mcqanswer: string;
   fibanswer: string;
   tfoptions: boolean[];

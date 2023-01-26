@@ -18,7 +18,7 @@ export default function AddQuestion() {
     questiondsc: "",
     tfoptions: [true, false],
     mcqoptions: ["", "", "", ""],
-    tfanswer: "",
+    tfanswer: false,
     mcqanswer: "",
     fibanswer: "",
     questionid: "",
