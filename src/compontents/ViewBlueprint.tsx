@@ -243,7 +243,7 @@ export default function ViewBlueprint() {
           <hr />
           <div className="marksSelection">
             <div className="subjectlist">
-              <table className="table">
+              <table className="custom-table">
                 <thead>
                   <tr>
                     <th>Subject</th>
@@ -270,108 +270,62 @@ export default function ViewBlueprint() {
     );
   }
   function objectiveMarksSelectionComponent() {
+    const sub_options = ["FIB", "MCQ", "T/F"];
+    const categories = ["FACT", "COMP", "APP"];
+    const sub_categories = ["MK", "CK", "SK"];
+
     return (
-      <div className="objectiveoption table-responsive">
-        <table className="table table-bordered">
+      <div className="objectiveoption">
+        <table className="custom-table">
           <thead>
-            <tr>
-              <th>
-                FIB
-                <tr>
-                  <th>
-                    COMP
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                  <th>
-                    APP
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                  <th>
-                    FACT
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                </tr>
-              </th>
-              <th>
-                MCQ
-                <tr>
-                  <th>
-                    COMP
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                  <th>
-                    APP
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                  <th>
-                    FACT
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                </tr>
-              </th>
-              <th>
-                T/F
-                <tr>
-                  <th>
-                    COMP
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                  <th>
-                    APP
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                  <th>
-                    FACT
-                    <tr>
-                      <th>MK</th>
-                      <th>CK</th>
-                      <th>SK</th>
-                    </tr>
-                  </th>
-                </tr>
-              </th>
+            <tr className="objectivemarksselection">
+              {sub_options.map((e, inx) => {
+                return (
+                  <>
+                    <th className="options" id={e + "_option"}>
+                      <span id={e === "T/F" ? "TF" : e}>{e}</span>
+                      <tr key={inx} className="suboptions">
+                        {categories.map((category, idx) => {
+                          return (
+                            <>
+                              <th id={category}>
+                                {category}
+                                <tr key={idx}>
+                                  {sub_categories.map((subcategory, i) => {
+                                    return (
+                                      <>
+                                        <th>{subcategory}</th>
+                                      </>
+                                    );
+                                  })}
+                                </tr>
+                              </th>
+                            </>
+                          );
+                        })}
+                      </tr>
+                    </th>
+                  </>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr className="objective_marksselectionpanel">
               <td>
                 <td>
                   <td>
-                    <input type="number" name="1" id="1" defaultValue={0} onChange={(e)=>{
-                        validateSelectedMarks(parseInt(e.currentTarget.value))
-                    }} min={0} max={2} />
+                    <input
+                      type="number"
+                      name="1"
+                      id="1"
+                      defaultValue={0}
+                      onChange={(e) => {
+                        validateSelectedMarks(parseInt(e.currentTarget.value));
+                      }}
+                      min={0}
+                      max={2}
+                    />
                   </td>
                   <td>
                     <input type="number" name="2" id="2" defaultValue={0} />
@@ -479,8 +433,7 @@ export default function ViewBlueprint() {
       </div>
     );
   }
-  function validateSelectedMarks(count:number){
-      
-      setSelectedMarks(selectedMarks+count)
+  function validateSelectedMarks(count: number) {
+    setSelectedMarks(selectedMarks + count);
   }
 }

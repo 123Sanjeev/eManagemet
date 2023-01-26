@@ -10,6 +10,23 @@ const appList = [
     type: "single",
   },
   {
+    MenuName: "Question Bank",
+    MenuUrl: "#",
+    type: "mutli",
+    mutiVal :[
+      {
+        MenuName: "Add Question",
+        MenuUrl: "/question/add",
+        type: "single",
+      },
+      {
+        MenuName: "View Question",
+        MenuUrl: "/question/view",
+        type: "single",
+      },
+    ]
+  },
+  {
     MenuName: "Blueprint",
     MenuUrl: "#",
     type: "multi",

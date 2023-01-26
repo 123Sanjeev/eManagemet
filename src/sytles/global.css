@@ -5,3 +5,20 @@
     height: auto;
 }
 
+/* Pop up styling */
+
+.popupcontainer{
+    width:100%;
+    height: 100vh;
+    background-color:grey;
+    position: absolute;
+    backface-visibility: visible;
+    left:0px;
+    opacity: 0.8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.popup>button{
+    margin-top: 50px;
+}
