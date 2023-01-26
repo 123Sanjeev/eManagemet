@@ -1,2 +1,2 @@
 # eManagemet
-e-Management is a application created for testing purpose
+e-Management is a application replacement of eAssessment
