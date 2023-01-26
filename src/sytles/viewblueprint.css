@@ -44,8 +44,54 @@
 .objectiveoption table{
     text-align: center;
 }
-.objectiveoption table thead tr th{
-    padding:8px;
+
+.objectivemarksselection{
+    height: 80px;
+}
+.objectivemarksselection, .objective_marksselectionpanel{
+    width: 100%;
+ 
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 0px;
+}
+.options{
+    border: 1px solid black;
+    padding:0px;
+    margin: 0px;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+
+#FIB,#MCQ,#TF{
+    width: 100%;
+    border-bottom: 1px solid grey;
+}
+
+#FIB_option > tr{
+    border-bottom: 1px solid grey;
+}
+#FACT > tr{
+    border-top : 1px solid grey;
+    border-right: 1px solid grey;
+}
+#COMP > tr{
+    border-top : 1px solid grey;
+    border-right: 1px solid grey;
+}
+#APP > tr{
+    border-top : 1px solid grey;
+}
+.suboptions{
+    width: 100%;
+    border-bottom: 1px solid grey;
+}
+.suboptions th{
+    width: 300px;
 }
 .objectiveoption table tbody td input{
     width: 40px;
