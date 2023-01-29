@@ -80,15 +80,15 @@ class db {
     return newQuestionid;
   }
 
-  async saveQuestion(question: QuestionForm) {
-    const response = await fetch(`${backendURL}question/addQuestion`, {
+  async saveQuestion(question: QuestionForm, type : string) {
+    const response = await fetch(`${backendURL}question/${type}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(question),
     });
-    return await response.text();
+    return await response.json();
   }
 
   async viewQuestions(viewQuestions: ViewQuestion) {
@@ -100,6 +100,16 @@ class db {
       body: JSON.stringify(viewQuestions),
     });
     return await response.json();
+  }
+  async viewQuestionWithId(id:number){
+    const response = await fetch(`${backendURL}question/viewQuestionWithId?id=${id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const questionData = await response.json()
+    return questionData
   }
 }
 export default new db();

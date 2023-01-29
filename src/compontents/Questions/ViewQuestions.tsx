@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react";
 import { ViewQuestion } from "./Question";
 import db from "../../api/dbqueries";
+import { Link } from "react-router-dom";
 
 export default function ViewQuestions() {
   const [formData, setFormData] = useState<ViewQuestion>({
@@ -21,6 +22,7 @@ export default function ViewQuestions() {
     { SUBOPTION: "Sub Option" },
     { CATEGORY: "Category" },
     { SUBCATEGORY: "Sub Category" },
+    { ACTION: "" },
   ];
   return (
     <>
@@ -51,17 +53,21 @@ export default function ViewQuestions() {
                     <th key={idx}>
                       {Object.values(e)[0]}
                       <br />
-                      <input
-                        type="text"
-                        name={Object.keys(e)[0]}
-                        onChange={(e) => {
-                          setFormData({
-                            ...formData,
-                            [e.currentTarget.name]: e.currentTarget.value,
-                          });
-                        }}
-                        className="form-control"
-                      />
+                      {Object.keys(e)[0] === "ACTION" ? (
+                      ""
+                      ) : (
+                        <input
+                          type="text"
+                          name={Object.keys(e)[0]}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              [e.currentTarget.name]: e.currentTarget.value,
+                            });
+                          }}
+                          className="form-control"
+                        />
+                      )}
                     </th>
                   );
                 })}
@@ -93,6 +99,7 @@ export default function ViewQuestions() {
             <td>{e.SUBOPTION}</td>
             <td>{e.CATEGORY}</td>
             <td>{e.SUBCATEGORY}</td>
+            <td><Link to={"/question/edit/"+e.QUESID} > Action </Link></td>
           </tr>
         );
       });

@@ -45,6 +45,7 @@ if(!props.isLoggedin){
         <Route path="/profile" element={<Profile />} />
         <Route path="/manageLinks" element={<ManageLinks />} />
         <Route path="/question/:action" element={<Question />} />
+        <Route path="/question/:action/:id" element={<Question />} />
       </Routes>
       {/* <Footer /> */}
     </>

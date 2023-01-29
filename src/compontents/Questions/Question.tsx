@@ -1,9 +1,12 @@
 import { useParams } from "react-router-dom";
 import "../../sytles/Questions.css";
 import AddQuestion from "./AddQuestion";
+import EditQuestion from "./EditQuestion";
 import ViewQuestions from "./ViewQuestions";
-
+import db from  '../../api/dbqueries'
+import { useState } from "react";
 export type QuestionForm = {
+  seq_id : number;
   option: string;
   suboption: string;
   category: string;
@@ -27,11 +30,26 @@ export type ViewQuestion = {
 };
 
 export default function Question() {
-  const { action } = useParams();
+
+
+  const [qid , setQid] = useState(0);
+
+  async function initQuestionid() {
+    const newQuestionid = await db.initQuestion();
+    setQid(parseInt(newQuestionid));
+  }
+
+
+  const { action ,id} = useParams();
   if (action?.toUpperCase() === "ADD") {
-    return <AddQuestion />;
+    initQuestionid()
+    return <AddQuestion isEditMode={false} id={0} questionid={qid}/>;
   } else if (action?.toUpperCase() === "VIEW") {
     return <ViewQuestions />;
+  }else if(action?.toUpperCase() === "EDIT"){
+    return <EditQuestion id={parseInt(id as string)} />;
   }
   return <>Question</>
+
+
 }
