@@ -19,9 +19,8 @@ type messageType = {
   message: string;
 };
 
-export default function Login(props: {
-  setLoginStatus: any;
-  setUserData: any;
+export default function Login(props:{
+  setUser: any;
 }) {
   const navigate = useNavigate();
   const [justifyActive, setJustifyActive] = useState("tab1");
@@ -182,7 +181,6 @@ export default function Login(props: {
     </div>
   );
   async function handleRegisterLogin(option: string) {
-    console.log(option);
     if (option === "tab1") {
       const data = {
         userId: username,
@@ -193,21 +191,15 @@ export default function Login(props: {
       const response = await db.login(
         data as { userId: number; password: string; loginkey: string }
       );
-
-      console.log(response);
-      debugger;
       if (response?.type === "error") {
-        debugger;
         setErrorCode({
           type: response?.type,
           message: response?.message,
         });
       } else {
-        sessionStorage.setItem("userid", data.userId.toString());
-        sessionStorage.setItem("sessionkey", response.loginkey);
-        props.setLoginStatus(true);
-        props.setUserData(response);
-        navigate("/viewblueprint");
+        localStorage.setItem('user', JSON.stringify(response))
+        props.setUser(response)
+        navigate("/");
       }
     } else {
       const registerForm = {
@@ -216,9 +208,8 @@ export default function Login(props: {
         password: password,
         location: location,
       };
-      console.log(registerForm);
+
       const user = await db.register(registerForm);
-      console.log(user);
     }
 
     //  window.location.reload();

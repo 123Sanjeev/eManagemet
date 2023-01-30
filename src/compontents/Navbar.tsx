@@ -5,21 +5,19 @@ import { Link } from "react-router-dom";
 import { user } from "./Dashboard";
 type applicationProps = {
   app: string;
-  username: any;
-  isLoggedin: boolean;
   userData: user;
 };
 
 const navbarDetails = function (
-  username: string,
   userData: user,
-  isLoggedin: boolean
 ) {
   const navbarDrawer = appList.map((data, id) => {
     return (
-      <>
-        {data.type === "single" ? (
-          <li key={id} className="nav-item">
+
+      <div key={id}>
+        {
+          data.type === "single" ? (
+          <li className="nav-item">
             <Link to={data.MenuUrl} className="nav-link">
               {data.MenuName}
             </Link>{" "}
@@ -29,7 +27,7 @@ const navbarDetails = function (
             <Link to={data.MenuUrl} className="nav-link">
               {data.MenuName}
             </Link>
-            <ul key={id} className="navbar-nav bg-dark">
+            <ul className="navbar-nav bg-dark">
               {" "}
               {data.mutiVal?.map((multi, idx) => {
                 return (
@@ -43,40 +41,36 @@ const navbarDetails = function (
             </ul>
           </li>
         )}
-      </>
+        </div>
     );
   });
 
-  console.log(userData);
-
-  const ADMIN = userData?.roles.map((e) => {
-    console.log(e);
+  const ADMIN = userData?.roles.map((e, idx) => {
     if (e.role === "ADMIN") {
       return (
-        <li className="nav-items">
+        <li className="nav-items" key={idx}>
           <Link to="/manageLinks" className="nav-link">
             Manage Routes
           </Link>
         </li>
       );
     }
+    return "";
   });
-
-  return isLoggedin ? (
+  return userData.userid !== ""  ? (
     <>
       {navbarDrawer}
       {ADMIN}
       <li className="nav-item text-white sign-in dropdown">
         <Link to="#" className="nav-link">
-          {username}
+          {userData.username}
         </Link>
         <ul key={1} className="navbar-nav bg-dark">
           <li className="nav-item">
             <span
               className="nav-link"
               onClick={() => {
-                console.log("jfaksdjflk");
-                sessionStorage.removeItem("userid");
+                localStorage.removeItem("user");
                 window.location.reload();
               }}
             >
@@ -106,9 +100,9 @@ const navbarDetails = function (
 export default function Navbar(props: applicationProps) {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-      <ul key={2} className="navbar-nav mr-auto">
+      <ul key={1} className="navbar-nav mr-auto">
         <li className="text-white nav-item" style={{ cursor: "pointer" }}>
-          <Link className="nav-link" to={"/"}>
+          <Link key={3} className="nav-link" to={"/"}>
             {props.app}{" "}
           </Link>
         </li>
@@ -129,9 +123,7 @@ export default function Navbar(props: applicationProps) {
         <ul key={2} className="navbar-nav mr-auto">
           {
             navbarDetails(
-              props.userData?.username,
               props.userData,
-              props.isLoggedin
             ) as ReactNode
           }
         </ul>

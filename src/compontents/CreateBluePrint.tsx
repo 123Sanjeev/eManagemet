@@ -139,11 +139,6 @@ async function processSubmitForm(e:any){
     e.preventDefault()
    
     const form = document.forms[0];
-
-
-    console.log(form?.option.value);
-
-    
     var marksArray:any[] = [];
     if(form?.option.value ==="Objective"){
         marksArray = [parseFloat(form?.FIB.value),parseFloat(form?.MCQ.value),parseFloat(form?.TF.value)]
@@ -187,9 +182,7 @@ async function processSubmitForm(e:any){
                 $('#loading').hide()
             }
         })
-        console.log(result)
     }catch(error){
-        console.error(error)
     }
     
     return result

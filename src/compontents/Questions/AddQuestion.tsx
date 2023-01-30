@@ -153,7 +153,6 @@ export default function AddQuestion(props: isEditMode) {
               id="question"
               className="form-control h-100 p-4 fibquestion"
               onChange={(e) => {
-                debugger
                 setQuestion({
                   ...question,
                   [e.currentTarget.name]: e.currentTarget.value,

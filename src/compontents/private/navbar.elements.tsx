@@ -1,29 +1,20 @@
 const appList = [
   {
-    MenuName: "Home",
-    MenuUrl: "/",
-    type: "single",
-  },
-  {
-    MenuName: "About",
-    MenuUrl: "/About",
-    type: "single",
-  },
-  {
     MenuName: "Question Bank",
     MenuUrl: "#",
     type: "mutli",
     mutiVal :[
       {
-        MenuName: "Add Question",
-        MenuUrl: "/question/add",
-        type: "single",
-      },
-      {
         MenuName: "View Question",
         MenuUrl: "/question/view",
         type: "single",
       },
+      {
+        MenuName: "Add Question",
+        MenuUrl: "/question/add",
+        type: "single",
+      },
+     
     ]
   },
   {
@@ -43,37 +34,6 @@ const appList = [
       },
     ],
   },
-  {
-    MenuName: "Blueprint",
-    MenuUrl: "#",
-    type: "multi",
-    mutiVal: [
-      {
-        MenuName: "View Blue print",
-        MenuUrl: "/viewBlueprint",
-        type: "multi",
-        mutiVal: [
-          {
-            MenuName: "Testing demo",
-            MenuUrl: "/viewBlueprint",
-            type: "single",
-          },
-        ],
-      }],
-          },
-        {
-          MenuName: "Publish Set",
-    MenuUrl: "/publishSet",
-        type: "multi",
-        mutiVal: [
-          {
-            MenuName: "Testing demo",
-            MenuUrl: "/viewBlueprint",
-            type: "single",
-          },
-        ],
-      },
-
 ];
 
 export default appList;

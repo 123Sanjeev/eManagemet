@@ -17,9 +17,7 @@ export default function ManageLinks() {
   }, []);
 
   async function loadJSONData() {
-    const response = await fetch(
-       `${backendURL}navbar/navlist`
-    );
+    const response = await fetch(`${backendURL}navbar/navlist`);
     const data = await response.json();
     var navlistArray: nav[] = [];
     data.forEach((nav: nav) => {
@@ -33,7 +31,6 @@ export default function ManageLinks() {
       }
     });
     setNavdata(navlistArray as nav[]);
-    console.log(data)
   }
   return (
     <div className="container-fluid d-flex flex-column justify-content-center align-center">

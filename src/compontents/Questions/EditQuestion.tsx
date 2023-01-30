@@ -34,9 +34,7 @@ export default function EditQuestion(props: selectedQuesiton) {
     const questionString = JSON.stringify(questionData);
     const questionJSON = JSON.parse(questionString)[0];
     const mcqOptions = questionJSON.mcqOptions;
-    console.log(questionJSON);
-    console.log(Object.entries(mcqOptions));
-
+   
     const question: QuestionForm = {
       seq_id : parseInt(questionJSON.SEQID as string),
       option: questionJSON.option,
@@ -142,8 +140,7 @@ export default function EditQuestion(props: selectedQuesiton) {
           <input type="button" value="Save" className="btn btn-primary m-2" onClick={
             async()=>{
               const updatedQuestion = await db.saveQuestion(selectedQuestion,"updateQuestion")
-              console.log(updatedQuestion);
-
+              freeze()
             }
           }/>
           <input
@@ -201,6 +198,7 @@ export default function EditQuestion(props: selectedQuesiton) {
               data-attribute="mcqoptions"
               onFocus={(e) => {
                 e.currentTarget.classList.remove("bg-light");
+                e.currentTarget.classList.remove("bg-white");
                 e.currentTarget.readOnly = false;
               }}
               onChange={(e) => {
@@ -216,5 +214,15 @@ export default function EditQuestion(props: selectedQuesiton) {
       );
     });
     return returningData;
+  }
+
+  function freeze(){
+    const editableElements = document.querySelectorAll("input[type='text']")
+    if(editableElements  && editableElements.length > 0 ){
+      editableElements.forEach((e)=>{
+        e.classList.remove('bg-white')
+        e.classList.add('bg-light')
+      })
+    }
   }
 }

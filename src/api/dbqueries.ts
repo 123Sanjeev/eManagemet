@@ -19,7 +19,6 @@ class db {
   findUsingQuery(table: string, params: string[]) {}
 
   async login(data: { userId: number; password: string; loginkey: string }) {
-    console.log(data);
 
     try {
       var loginResponse = await fetch(`${backendURL}user/login`, {
@@ -29,7 +28,6 @@ class db {
         },
         body: JSON.stringify(data),
       });
-      console.log(loginResponse.status);
       if (loginResponse.ok) {
         return await loginResponse.json();
       } else {
@@ -39,8 +37,6 @@ class db {
         };
       }
     } catch (err) {
-      console.log(err);
-      console.log(typeof err);
       return {
         type: "error",
         message: "", //err.toString()

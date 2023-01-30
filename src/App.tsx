@@ -1,16 +1,10 @@
-import { useState} from 'react';
-import Dashboard, { user } from './compontents/Dashboard';
-import Navbar from './compontents/Navbar';
-
-const uid = sessionStorage.getItem("userid")
+import Dashboard from './compontents/Dashboard';
 
 function App() {
-  const [loginStatus, setLoginStatus] = useState(false);
-  const [loggedInUser, setUser] = useState<user>();
   return (
     <div className="App">
-      <Navbar app="eManagement" userData = { loggedInUser as user } username={uid} isLoggedin={(loginStatus || uid) ? true : false} />
-      <Dashboard loginStatus= {setLoginStatus} isLoggedin = {(loginStatus || uid) ? true : false} userData = {loggedInUser} setUserData={setUser}/>
+      {/* <Navbar app="eManagement" userData = { loggedInUser as user } username={uid} isLoggedin={(loginStatus || uid) ? true : false} /> */}
+      <Dashboard />
     </div>
   );
 }
