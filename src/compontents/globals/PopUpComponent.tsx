@@ -1,9 +1,11 @@
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import "../../sytles/global.css";
 
 export default function PopUpComponent(props: {
   message: string;
-  redirectComponent: string;
+  redirectComponent: any;
+  setState: any;
+  state?: object;
 }) {
   const redirect = useNavigate();
   return (
@@ -14,7 +16,16 @@ export default function PopUpComponent(props: {
         {popUp(props.message)}{" "}
         <button
           onClick={() => {
-            redirect(props.redirectComponent);
+            if (props.redirectComponent) {
+              if (props.state) {
+                redirect(props.redirectComponent, { state: props.state });
+              } else {
+                redirect(props.redirectComponent);
+              }
+            }
+            if (props.setState) {
+              props.setState(false);
+            }
           }}
           className="btn btn-danger"
         >

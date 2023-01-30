@@ -1,14 +1,15 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "../pages/Home";
 import About from "./About";
-import CreateBluePrint from "./CreateBluePrint";
-import ViewBluePrint from "./ViewBlueprint";
+import CreateBluePrint from "./Blueprint/CreateBluePrint";
+import ViewBluePrint from "./Blueprint/ViewBlueprint";
 import Login from "./login/login";
 import Profile from "./profile/Profile";
 import ManageLinks from "./mangeRoutes/manageLinks";
 import Question from "./Questions/Question";
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import UpdateBlueprint from "./Blueprint/UpdateBlueprint";
 
 type role = {
   role: string | undefined;
@@ -43,15 +44,23 @@ export default function Dashboard() {
       <Navbar app="E Assessment" userData={user} />
       {/* <Navbar app="eManagement" userData = { props.userData as user } username={uid} isLoggedin={props.isLoggedin} /> */}
       <Routes>
+        {/* Home route */}
         <Route path="/" element={<Home userData={user} />} />
+        {/* About page route TODO: to be removed in production build */}
         <Route path="/About" element={<About />} />
+        {/* Blueprint routes */}
         <Route path="/createBlueprint" element={<CreateBluePrint />} />
         <Route path="/viewBlueprint" element={<ViewBluePrint />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/manageLinks" element={<ManageLinks />} />
+        <Route path="/viewBlueprint/:bpid" element={<UpdateBlueprint />} />
+        {/* Question routes */}
         <Route path="/question/:action" element={<Question />} />
         <Route path="/question/:action/:id" element={<Question />} />
+        {/* Login Route */}
         <Route path="/login" element={<Login setUser={setUser} />} />
+        {/* Profile Route */}
+        <Route path="/profile" element={<Profile />} />
+        {/* Manage links route */}
+        <Route path="/manageLinks" element={<ManageLinks />} />
       </Routes>
       {/* <Footer /> */}
     </>

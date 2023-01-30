@@ -1,9 +1,10 @@
 import { ReactNode, useState } from "react";
 import { ViewQuestion } from "./Question";
 import db from "../../api/dbqueries";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function ViewQuestions() {
+  const redirect = useNavigate();
   const [formData, setFormData] = useState<ViewQuestion>({
     QUESID: "",
     OPTION: "",
@@ -54,7 +55,7 @@ export default function ViewQuestions() {
                       {Object.values(e)[0]}
                       <br />
                       {Object.keys(e)[0] === "ACTION" ? (
-                      ""
+                        ""
                       ) : (
                         <input
                           type="text"
@@ -99,11 +100,38 @@ export default function ViewQuestions() {
             <td>{e.SUBOPTION}</td>
             <td>{e.CATEGORY}</td>
             <td>{e.SUBCATEGORY}</td>
-            <td><Link to={"/question/edit/"+e.QUESID} > Action </Link></td>
+            <td colSpan={4}>
+              <select
+                name="Action"
+                id=""
+                className="form-control"
+                onChange={(evt) => {
+                  actionEvent(
+                    evt.currentTarget.selectedOptions[0].value,
+                    parseInt(e.QUESID as string)
+                  );
+                }}
+              >
+                <option value="">--Select Action--</option>
+                <option value="FRZ">Freeze</option>
+                <option value="EDT">Edit</option>
+              </select>
+              {/* <Link to={"/question/edit/"+e.QUESID} > Action </Link> */}
+            </td>
           </tr>
         );
       });
       setQuestions(questionView);
+    }
+  }
+  function actionEvent(event: string, questionid: number) {
+    console.log(event, questionid);
+    switch (event) {
+      case "FRZ":
+        alert("Freeze funcationality will be done on later stages");
+        return;
+      case "EDT":
+        redirect("/question/edit/" + questionid);
     }
   }
 }

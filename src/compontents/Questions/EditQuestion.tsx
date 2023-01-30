@@ -2,7 +2,8 @@ import { QuestionForm } from "./Question";
 import { useEffect, useState } from "react";
 import db from "../../api/dbqueries";
 import "../../sytles/editQuestions.css";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import PopUpComponent from "../globals/PopUpComponent";
 type selectedQuesiton = {
   id: number;
 };
@@ -14,7 +15,7 @@ export default function EditQuestion(props: selectedQuesiton) {
       loadQuestionWithId(props.id);
     }
   });
-
+  const [isSaved, setIsSaved] = useState(false);
   const [selectedQuestion, setSelectedOption] = useState<QuestionForm>({
     seq_id: 0,
     option: "",
@@ -34,9 +35,9 @@ export default function EditQuestion(props: selectedQuesiton) {
     const questionString = JSON.stringify(questionData);
     const questionJSON = JSON.parse(questionString)[0];
     const mcqOptions = questionJSON.mcqOptions;
-   
+
     const question: QuestionForm = {
-      seq_id : parseInt(questionJSON.SEQID as string),
+      seq_id: parseInt(questionJSON.SEQID as string),
       option: questionJSON.option,
       suboption: questionJSON.suboption,
       category: questionJSON.category,
@@ -46,12 +47,15 @@ export default function EditQuestion(props: selectedQuesiton) {
       mcqanswer: questionJSON.suboption === "MCQ" ? questionJSON.ANSWER : "",
       fibanswer: questionJSON.suboption === "FIB" ? questionJSON.ANSWER : "",
       tfoptions: [true, false],
-      mcqoptions: [
-        mcqOptions.option1,
-        mcqOptions.option2,
-        mcqOptions.option3,
-        mcqOptions.option4,
-      ],
+      mcqoptions:
+        questionJSON.suboption === "MCQ"
+          ? [
+              mcqOptions.option1,
+              mcqOptions.option2,
+              mcqOptions.option3,
+              mcqOptions.option4,
+            ]
+          : ["", "", "", ""],
       questionid: questionJSON.quesid,
     };
 
@@ -60,6 +64,15 @@ export default function EditQuestion(props: selectedQuesiton) {
   function renderEditForm() {
     return (
       <div className="container">
+        {isSaved ? (
+          <PopUpComponent
+            message={`Question id ${selectedQuestion.questionid} has been saved successfully`}
+            redirectComponent={false}
+            setState={setIsSaved}
+          />
+        ) : (
+          <></>
+        )}
         <h1>View/Edit Question</h1>
         <hr />
 
@@ -134,15 +147,22 @@ export default function EditQuestion(props: selectedQuesiton) {
             }}
           />
         </div>
-        {selectedQuestion?.suboption === "MCQ" ? renderMCQoption() : <></>}
+        {renderAnswers(selectedQuestion?.suboption)}
 
         <div className="d-flex w-100 justify-content-center align-item-center">
-          <input type="button" value="Save" className="btn btn-primary m-2" onClick={
-            async()=>{
-              const updatedQuestion = await db.saveQuestion(selectedQuestion,"updateQuestion")
-              freeze()
-            }
-          }/>
+          <input
+            type="button"
+            value="Save"
+            className="btn btn-primary m-2"
+            onClick={async () => {
+              const updatedQuestion = await db.saveQuestion(
+                selectedQuestion,
+                "updateQuestion"
+              );
+              freeze();
+              setIsSaved(true);
+            }}
+          />
           <input
             type="button"
             value="Cancel"
@@ -161,6 +181,90 @@ export default function EditQuestion(props: selectedQuesiton) {
     </>
   );
 
+  function renderAnswers(suboption: string) {
+    switch (suboption) {
+      case "MCQ":
+        return renderMCQoption();
+      case "FIB":
+        return renderFIBAnswer();
+      case "TF":
+        return renderTFOptions();
+    }
+  }
+
+  function renderFIBAnswer() {
+    return (
+      <div className="form-group">
+        <label htmlFor="fibanswer">Answer</label>
+        <input
+          type="text"
+          name="fibanswer"
+          id="fibanswer"
+          value={selectedQuestion.fibanswer}
+          onFocus={(e) => {
+            e.currentTarget.classList.remove("bg-light");
+          }}
+          onChange={(e) => {
+            setSelectedOption({
+              ...selectedQuestion,
+              [e.currentTarget.name]: e.currentTarget.value,
+            });
+          }}
+          className="form-control bg-light"
+        />
+      </div>
+    );
+  }
+  function renderTFOptions() {
+    return (
+      <div className="form-group">
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="true"
+            id="true"
+            data-attribute="tfanswer"
+            onChange={(e) => {
+              setSelectedOption({
+                ...selectedQuestion,
+                [e.currentTarget.dataset.attribute as string]: e.currentTarget
+                  .checked
+                  ? true
+                  : false,
+              });
+            }}
+            checked={selectedQuestion.tfanswer ? true : false}
+          />
+          <label className="form-check-label" htmlFor="true">
+            True
+          </label>
+        </div>
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            name="false"
+            id="questionOptions"
+            data-attribute="tfanswer"
+            onChange={(e) => {
+              setSelectedOption({
+                ...selectedQuestion,
+                [e.currentTarget.dataset.attribute as string]: e.currentTarget
+                  .checked
+                  ? false
+                  : true,
+              });
+            }}
+            checked={selectedQuestion.tfanswer ? false : true}
+          />
+          <label className="form-check-label" htmlFor="false">
+            False
+          </label>
+        </div>
+      </div>
+    );
+  }
   function renderMCQoption() {
     var mcqoptions: string[] = selectedQuestion?.mcqoptions;
     const returningData = selectedQuestion?.mcqoptions.map((e, idx) => {
@@ -216,13 +320,20 @@ export default function EditQuestion(props: selectedQuesiton) {
     return returningData;
   }
 
-  function freeze(){
-    const editableElements = document.querySelectorAll("input[type='text']")
-    if(editableElements  && editableElements.length > 0 ){
-      editableElements.forEach((e)=>{
-        e.classList.remove('bg-white')
-        e.classList.add('bg-light')
-      })
+  function freeze() {
+    const editableElements = document.querySelectorAll("input[type='text']");
+    const question = document.querySelectorAll("textarea");
+    if (question.length > 0) {
+      question.forEach((e) => {
+        e.classList.remove("bg-white");
+        e.classList.add("bg-light");
+      });
+    }
+    if (editableElements && editableElements.length > 0) {
+      editableElements.forEach((e) => {
+        e.classList.remove("bg-white");
+        e.classList.add("bg-light");
+      });
     }
   }
 }

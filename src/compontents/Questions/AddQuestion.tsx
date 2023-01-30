@@ -313,7 +313,7 @@ export default function AddQuestion(props: isEditMode) {
       {isSaved ? (
         <PopUpComponent
           message={`Question id ${question.questionid} has been saved successfully`}
-          redirectComponent="/question/view"
+          redirectComponent={`/question/edit/${question.questionid}`} setState={setIsSaved}
         />
       ) : (
         ""
