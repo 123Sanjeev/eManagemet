@@ -1,10 +1,13 @@
 import "../../sytles/createBlueprint.css";
 import $ from "jquery";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { backendURL } from "../globals/global_variable";
 import PopUpComponent from "../globals/PopUpComponent";
-var selectedMarks: number[] = [];
-export default function CreateBluePrint() {
+
+export default function CreateBluePrint(props: { title: string }) {
+  useEffect(() => {
+    document.title = props.title;
+  });
   const [selectedOption, setSelectedOption] = useState("");
   const [bpid, setBpId] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
@@ -16,8 +19,10 @@ export default function CreateBluePrint() {
     subject: string;
     term: string;
     option: string;
-    marks: number[];
+    objectivemarks: number[];
+    subjectivemarks: number[];
     totalmarks: number;
+    status: string;
   }>({
     title: "",
     location: "9TS",
@@ -25,8 +30,10 @@ export default function CreateBluePrint() {
     subject: "",
     term: "",
     option: "",
-    marks: selectedMarks,
+    objectivemarks: [0, 0, 0],
+    subjectivemarks: [0, 0, 0, 0],
     totalmarks: 0,
+    status: "DRAFT",
   });
 
   return (
@@ -136,13 +143,10 @@ export default function CreateBluePrint() {
             id="option"
             className="form-control"
             onChange={(e) => {
-              console.log("Before", selectedMarks);
-              selectedMarks = [];
               setBlueprintdata({
                 ...blueprintdata,
                 [e.currentTarget.name]:
                   e.currentTarget.selectedOptions[0].value,
-                  "marks": selectedMarks,
               });
               setSelectedOption(e.target.value);
               const totalMarksSelectionbox =
@@ -196,57 +200,19 @@ export default function CreateBluePrint() {
     debugger;
     e.preventDefault();
 
-    const form = document.forms[0];
-    var marksArray: any[] = [];
-    if (form?.option.value === "Objective") {
-      marksArray = [
-        parseFloat(form?.FIB.value),
-        parseFloat(form?.MCQ.value),
-        parseFloat(form?.TF.value),
-      ];
-    } else if (form?.option.value === "Subjective") {
-      marksArray = [
-        parseFloat(form?.FIB.value),
-        parseFloat(form?.VSA.value),
-        parseFloat(form?.SA.value),
-        parseFloat(form?.LA.value),
-      ];
-    } else if (form?.option.value === "Both") {
-      marksArray = [
-        parseFloat(form?.FIBOBJ.value),
-        parseFloat(form?.VSA.value),
-        parseFloat(form?.SA.value),
-        parseFloat(form?.LA.value),
-        parseFloat(form?.FIBSUB.value),
-        parseFloat(form?.MCQ.value),
-        parseFloat(form?.TF.values),
-      ];
-    }
-
-    marksArray.forEach((e: number, idx) => {
-      if (Number.isNaN(e)) {
-        marksArray[idx] = 0.0;
-      }
-    });
-
-    const formDataObject = {
-      title: form?.bptitle.value,
-      location: form?.location.value,
-      mastercoursename: form?.mastercoursename.value,
-      subject: form?.subject.value,
-      term: form?.term.value,
-      option: form?.option.value,
-      marks: marksArray,
-      totalmarks: parseFloat(form?.totalmarks.value),
+    const formData = {
+      ...blueprintdata,
+      marks:
+        blueprintdata.option === "Subjective"
+          ? blueprintdata.subjectivemarks
+          : blueprintdata.objectivemarks,
     };
-
-    setBlueprintdata(formDataObject);
     let result;
     try {
       result = await $.ajax({
         type: "POST",
         url: `${backendURL}blueprint/create`,
-        data: JSON.stringify(formDataObject),
+        data: JSON.stringify(formData),
         headers: {
           "Content-Type": "application/json",
         },
@@ -262,6 +228,7 @@ export default function CreateBluePrint() {
   }
   function optionComponent(option: string) {
     if (option === "Subjective") {
+      var subjectiveMarks: number[] = blueprintdata.subjectivemarks;
       return (
         <>
           <div className="Subjective marks" id="Subjective">
@@ -275,14 +242,14 @@ export default function CreateBluePrint() {
                   id="FIB"
                   data-attribute="marks"
                   onChange={(e) => {
-                    selectedMarks.push(parseInt(e.currentTarget.value));
+                    subjectiveMarks[0] = parseInt(e.currentTarget.value);
                     setBlueprintdata({
                       ...blueprintdata,
                       [e.currentTarget.dataset.attribute as string]:
-                        selectedMarks,
+                        subjectiveMarks,
                     });
                   }}
-                  value={blueprintdata.marks[0]!}
+                  value={blueprintdata.subjectivemarks[0]}
                 />
               </label>
             </div>
@@ -296,14 +263,14 @@ export default function CreateBluePrint() {
                   id="VSA"
                   data-attribute="marks"
                   onChange={(e) => {
-                    selectedMarks.push(parseInt(e.currentTarget.value));
+                    subjectiveMarks[1] = parseInt(e.currentTarget.value);
                     setBlueprintdata({
                       ...blueprintdata,
                       [e.currentTarget.dataset.attribute as string]:
-                        selectedMarks,
+                        subjectiveMarks,
                     });
                   }}
-                  value={blueprintdata.marks[1]!}
+                  value={blueprintdata.subjectivemarks[1]}
                 />
               </label>
             </div>
@@ -317,14 +284,14 @@ export default function CreateBluePrint() {
                   id="LA"
                   data-attribute="marks"
                   onChange={(e) => {
-                    selectedMarks.push(parseInt(e.currentTarget.value));
+                    subjectiveMarks[2] = parseInt(e.currentTarget.value);
                     setBlueprintdata({
                       ...blueprintdata,
                       [e.currentTarget.dataset.attribute as string]:
-                        selectedMarks,
+                        subjectiveMarks,
                     });
                   }}
-                  value={blueprintdata.marks[2]!}
+                  value={blueprintdata.subjectivemarks[2]}
                 />
               </label>
             </div>
@@ -338,14 +305,14 @@ export default function CreateBluePrint() {
                   id="SA"
                   data-attribute="marks"
                   onChange={(e) => {
-                    selectedMarks.push(parseInt(e.currentTarget.value));
+                    subjectiveMarks[3] = parseInt(e.currentTarget.value);
                     setBlueprintdata({
                       ...blueprintdata,
                       [e.currentTarget.dataset.attribute as string]:
-                        selectedMarks,
+                        subjectiveMarks,
                     });
                   }}
-                  value={blueprintdata.marks[3]!}
+                  value={blueprintdata.subjectivemarks[3]}
                 />
               </label>
             </div>
@@ -353,6 +320,7 @@ export default function CreateBluePrint() {
         </>
       );
     } else if (option === "Objective") {
+      var objectiveMarks: number[] = blueprintdata.objectivemarks;
       return (
         <>
           <div className="Objective marks" id="Objective">
@@ -366,14 +334,14 @@ export default function CreateBluePrint() {
                   id="FIB"
                   data-attribute="marks"
                   onChange={(e) => {
-                    selectedMarks.push(parseInt(e.currentTarget.value));
+                    objectiveMarks[0] = parseInt(e.currentTarget.value);
                     setBlueprintdata({
                       ...blueprintdata,
                       [e.currentTarget.dataset.attribute as string]:
-                        selectedMarks,
+                        objectiveMarks,
                     });
                   }}
-                  value={blueprintdata.marks[0]!}
+                  value={blueprintdata.objectivemarks[0]}
                 />
               </label>
             </div>
@@ -387,14 +355,14 @@ export default function CreateBluePrint() {
                   id="MCQ"
                   data-attribute="marks"
                   onChange={(e) => {
-                    selectedMarks.push(parseInt(e.currentTarget.value));
+                    objectiveMarks[1] = parseInt(e.currentTarget.value);
                     setBlueprintdata({
                       ...blueprintdata,
                       [e.currentTarget.dataset.attribute as string]:
-                        selectedMarks,
+                        objectiveMarks,
                     });
                   }}
-                  value={blueprintdata.marks[1]!}
+                  value={blueprintdata.objectivemarks[1]}
                 />
               </label>
             </div>
@@ -408,14 +376,14 @@ export default function CreateBluePrint() {
                   id="TF"
                   data-attribute="marks"
                   onChange={(e) => {
-                    selectedMarks.push(parseInt(e.currentTarget.value));
+                    objectiveMarks[2] = parseInt(e.currentTarget.value);
                     setBlueprintdata({
                       ...blueprintdata,
                       [e.currentTarget.dataset.attribute as string]:
-                        selectedMarks,
+                        objectiveMarks,
                     });
                   }}
-                  value={blueprintdata.marks[2]!}
+                  value={blueprintdata.objectivemarks[2]}
                 />
               </label>
             </div>{" "}

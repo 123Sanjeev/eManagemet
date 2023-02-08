@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { backendURL } from "../globals/global_variable";
 import "../../sytles/viewblueprint.css";
 import "../../sytles/global.css";
@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 export type blueprintType = {
   blueprintid: number;
-  masterCourseName: string;
+  mastercoursename: string;
   subject: string;
   term: string;
   option: string;
@@ -14,8 +14,11 @@ export type blueprintType = {
   totalMarks: string;
 };
 
-export default function ViewBlueprint() {
+export default function ViewBlueprint(props:{title:string}) {
   const redirect = useNavigate();
+  useEffect(()=>{
+    document.title=props.title
+  })
   const [blueprintdata, setBlueprintdata] = useState<blueprintType>();
   async function handleLoadBlueprintData(
     event: React.FormEvent<HTMLFormElement>
@@ -40,6 +43,7 @@ export default function ViewBlueprint() {
     });
 
     const bpdata = await response.json();
+    console.log(bpdata)
     const bpViewData = bpdata.map((bp: blueprintType, idx: number) => {
       return (
         <div className="row " key={idx}>
@@ -47,13 +51,14 @@ export default function ViewBlueprint() {
           <div
             className="col border p-2  text-primary"
             onClick={(e) => {
+              console.log(`View blueprint data for ${bp.blueprintid} and data is ${ Object.keys(bp) }`)
               redirect("/viewBlueprint/" + bp.blueprintid, {state : bp});
             }}
             id="blueprintid"
           >
             {bp.blueprintid}
           </div>
-          <div className="col border p-2">{bp.masterCourseName}</div>
+          <div className="col border p-2">{bp.mastercoursename}</div>
           <div className="col border p-2">{bp.subject}</div>
           <div className="col border p-2">{bp.term}</div>
           <div className="col border p-2">{bp.option}</div>

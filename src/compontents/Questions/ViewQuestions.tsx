@@ -114,7 +114,7 @@ export default function ViewQuestions() {
               >
                 <option value="">--Select Action--</option>
                 <option value="FRZ">Freeze</option>
-                <option value="EDT">Edit</option>
+                <option value="EDT">View</option>
               </select>
               {/* <Link to={"/question/edit/"+e.QUESID} > Action </Link> */}
             </td>

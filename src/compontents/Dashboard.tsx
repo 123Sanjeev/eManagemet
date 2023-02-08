@@ -45,18 +45,18 @@ export default function Dashboard() {
       {/* <Navbar app="eManagement" userData = { props.userData as user } username={uid} isLoggedin={props.isLoggedin} /> */}
       <Routes>
         {/* Home route */}
-        <Route path="/" element={<Home userData={user} />} />
+        <Route path="/" element={<Home userData={user} title={"Home"} />} />
         {/* About page route TODO: to be removed in production build */}
         <Route path="/About" element={<About />} />
         {/* Blueprint routes */}
-        <Route path="/createBlueprint" element={<CreateBluePrint />} />
-        <Route path="/viewBlueprint" element={<ViewBluePrint />} />
-        <Route path="/viewBlueprint/:bpid" element={<UpdateBlueprint />} />
+        <Route path="/createBlueprint" element={<CreateBluePrint title={"Create Blueprint"} />} />
+        <Route path="/viewBlueprint" element={<ViewBluePrint title={"View Blueprint"}/>} />
+        <Route path="/viewBlueprint/:bpid" element={<UpdateBlueprint title={"Update Blueprint"} user={user} />} />
         {/* Question routes */}
-        <Route path="/question/:action" element={<Question />} />
-        <Route path="/question/:action/:id" element={<Question />} />
+        <Route path="/question/:action" element={<Question title={"Question"} user={user} />} />
+        <Route path="/question/:action/:id" element={<Question title={"Edit Question"} user={user} />} />
         {/* Login Route */}
-        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/login" element={<Login setUser={setUser} title={"Login"}/>} />
         {/* Profile Route */}
         <Route path="/profile" element={<Profile />} />
         {/* Manage links route */}

@@ -4,17 +4,33 @@ import db from "../../api/dbqueries";
 import "../../sytles/editQuestions.css";
 import { useNavigate } from "react-router-dom";
 import PopUpComponent from "../globals/PopUpComponent";
+import { user } from "../Dashboard";
+import { RoleBasedAuthorities } from "../../authorization/AuthAccess";
 type selectedQuesiton = {
   id: number;
+  user : user;
 };
 
 export default function EditQuestion(props: selectedQuesiton) {
   const redirect = useNavigate();
   useEffect(() => {
+    props.user.roles.forEach(role =>{
+      switch(role.role){
+        case "ADMIN": 
+          setCapabilities(RoleBasedAuthorities["UEB"].authorizedActions)
+      }
+    })
     if (selectedQuestion.questionid === "") {
       loadQuestionWithId(props.id);
     }
+
   });
+  const [capabilities , setCapabilities] = useState<{
+    I: boolean;
+    U: boolean;
+    V: boolean;
+    D: boolean;
+}>();
   const [isSaved, setIsSaved] = useState(false);
   const [selectedQuestion, setSelectedOption] = useState<QuestionForm>({
     seq_id: 0,
@@ -136,6 +152,7 @@ export default function EditQuestion(props: selectedQuesiton) {
             className="form-control bg-light"
             readOnly={true}
             onFocus={(e) => {
+              if(!capabilities?.U) return false
               e.currentTarget.classList.remove("bg-light");
               e.currentTarget.readOnly = false;
             }}
@@ -150,7 +167,8 @@ export default function EditQuestion(props: selectedQuesiton) {
         {renderAnswers(selectedQuestion?.suboption)}
 
         <div className="d-flex w-100 justify-content-center align-item-center">
-          <input
+          {
+            capabilities?.U ? <input
             type="button"
             value="Save"
             className="btn btn-primary m-2"
@@ -162,7 +180,9 @@ export default function EditQuestion(props: selectedQuesiton) {
               freeze();
               setIsSaved(true);
             }}
-          />
+          /> : ""
+          }
+          
           <input
             type="button"
             value="Cancel"
@@ -202,6 +222,7 @@ export default function EditQuestion(props: selectedQuesiton) {
           id="fibanswer"
           value={selectedQuestion.fibanswer}
           onFocus={(e) => {
+            if(!capabilities?.U) return false
             e.currentTarget.classList.remove("bg-light");
           }}
           onChange={(e) => {
@@ -301,6 +322,7 @@ export default function EditQuestion(props: selectedQuesiton) {
               className="form-control bg-light"
               data-attribute="mcqoptions"
               onFocus={(e) => {
+                if(!capabilities?.U) return false
                 e.currentTarget.classList.remove("bg-light");
                 e.currentTarget.classList.remove("bg-white");
                 e.currentTarget.readOnly = false;

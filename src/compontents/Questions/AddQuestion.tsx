@@ -7,19 +7,17 @@ import PopUpComponent from "../globals/PopUpComponent";
 type isEditMode = {
   isEditMode: boolean;
   id: number;
-  questionid : number;
+  questionid: number;
 };
 
 type RenderQuestionType = {
-  questionType : string;
-  
-}
+  questionType: string;
+};
 
 export default function AddQuestion(props: isEditMode) {
-
   const [questionid, setQuestionid] = useState<string>();
   const [question, setQuestion] = useState<QuestionForm>({
-    seq_id : 0,
+    seq_id: 0,
     option: "",
     suboption: "",
     category: "",
@@ -35,13 +33,13 @@ export default function AddQuestion(props: isEditMode) {
   const [questionType, setQuestionType] = useState("");
   const [suboption, setSuboption] = useState({});
   const [isSaved, setIsSaved] = useState(false);
-  
-  useEffect(()=>{
-    question.questionid = props.questionid.toString()
-    setQuestionid(props.questionid.toString())
-  },[questionid , question ,isSaved, props.questionid])
 
-  function RenderAnswerComponent(answers:RenderQuestionType) {
+  useEffect(() => {
+    question.questionid = props.questionid.toString();
+    setQuestionid(props.questionid.toString());
+  }, [questionid, question, isSaved, props.questionid]);
+
+  function RenderAnswerComponent(answers: RenderQuestionType) {
     switch (answers.questionType) {
       case "FIB":
         return (
@@ -128,10 +126,8 @@ export default function AddQuestion(props: isEditMode) {
                 onChange={(e) => {
                   setQuestion({
                     ...question,
-                    [e.currentTarget.dataset.attribute as string]: e
-                      .currentTarget.checked
-                      ? false
-                      : true,
+                    [e.currentTarget.dataset.attribute as string]:
+                      !e.currentTarget.checked,
                   });
                 }}
                 checked={question.tfanswer ? false : true}
@@ -175,7 +171,7 @@ export default function AddQuestion(props: isEditMode) {
                       e.currentTarget.value,
                   });
                 }}
-                checked={question.mcqanswer === "option1" ? true : false}
+                checked={question.mcqanswer === "option1"}
                 readOnly={props.isEditMode}
               />
               <label htmlFor="option1">Option 1</label>
@@ -303,8 +299,8 @@ export default function AddQuestion(props: isEditMode) {
             </div>
           </div>
         );
-        default:
-          return <></>;
+      default:
+        return <></>;
     }
   }
 
@@ -313,7 +309,8 @@ export default function AddQuestion(props: isEditMode) {
       {isSaved ? (
         <PopUpComponent
           message={`Question id ${question.questionid} has been saved successfully`}
-          redirectComponent={`/question/edit/${question.questionid}`} setState={setIsSaved}
+          redirectComponent={`/question/edit/${question.questionid}`}
+          setState={setIsSaved}
         />
       ) : (
         ""
@@ -428,10 +425,9 @@ export default function AddQuestion(props: isEditMode) {
 
         <div className="answerSection">
           {
-            RenderAnswerComponent({questionType} as RenderQuestionType)
+            RenderAnswerComponent({ questionType } as RenderQuestionType)
             // <RenderAnswerComponent questionType={questionType} />
-            
-            }
+          }
         </div>
         <div className="interaction-btn">
           <input
@@ -449,7 +445,7 @@ export default function AddQuestion(props: isEditMode) {
   );
 
   async function saveQuestion() {
-    await db.saveQuestion(question,"addQuestion");
+    await db.saveQuestion(question, "addQuestion");
     setIsSaved(true);
   }
 }

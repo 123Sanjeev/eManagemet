@@ -3,64 +3,144 @@ import appList from "./private/navbar.elements";
 import "../sytles/navbar.css";
 import { Link } from "react-router-dom";
 import { user } from "./Dashboard";
+import { RoleBasedAuthorities } from "../authorization/AuthAccess";
 type applicationProps = {
   app: string;
   userData: user;
 };
 
-const navbarDetails = function (
-  userData: user,
-) {
-  const navbarDrawer = appList.map((data, id) => {
-    return (
-
-      <div key={id}>
-        {
-          data.type === "single" ? (
-          <li className="nav-item">
-            <Link to={data.MenuUrl} className="nav-link">
-              {data.MenuName}
-            </Link>{" "}
-          </li>
-        ) : (
-          <li key={id} className="nav-item dropdown">
-            <Link to={data.MenuUrl} className="nav-link">
-              {data.MenuName}
-            </Link>
-            <ul className="navbar-nav bg-dark">
-              {" "}
-              {data.mutiVal?.map((multi, idx) => {
-                return (
-                  <li className="nav-item" key={idx}>
-                    <Link to={multi.MenuUrl} className="nav-link">
-                      {multi.MenuName}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </li>
-        )}
-        </div>
-    );
-  });
-
-  const ADMIN = userData?.roles.map((e, idx) => {
-    if (e.role === "ADMIN") {
-      return (
-        <li className="nav-items" key={idx}>
-          <Link to="/manageLinks" className="nav-link">
-            Manage Routes
-          </Link>
-        </li>
-      );
+const navbarDetails = function (userData: user) {
+  const apps: [
+    {
+      AuthApps: string[];
+      AuthorizedActions: {
+        I: boolean;
+        U: boolean;
+        V: boolean;
+        D: boolean;
+      };
+    }
+  ] = userData.roles.map((role, idx) => {
+    switch (role.role) {
+      case "ADMIN":
+        return {
+          AuthApps: RoleBasedAuthorities["UEB"].authorizedApps,
+          AuthorizedActions: RoleBasedAuthorities["UEB"].authorizedActions,
+        };
     }
     return "";
+  }) as [
+    {
+      AuthApps: string[];
+      AuthorizedActions: {
+        I: boolean;
+        U: boolean;
+        V: boolean;
+        D: boolean;
+      };
+    }
+  ];
+
+  console.log(apps);
+
+  const appData = apps.map((ap) => {
+    return ap.AuthApps.map((e) => {
+      return appList.map((nav, idx) => {
+        if (nav.app === e) {
+          return (
+            <>
+              {nav.type === "single" ? (
+                <li className="nav-item">
+                  <Link to={nav.MenuUrl} key={idx} className="nav-link">
+                    {nav.MenuName}
+                  </Link>
+                </li>
+              ) : (
+                <li key={idx} className="nav-item dropdown">
+                  <Link to={nav.MenuUrl} className="nav-link">
+                    {nav.MenuName}
+                  </Link>
+                  <ul className="navbar-nav bg-dark">
+                    {" "}
+                    {nav.mutiVal?.map((multi, idx) => {
+                      if(ap.AuthorizedActions.V && multi.app === "V"){
+                        return (
+                          <li className="nav-item" key={idx}>
+                            <Link to={multi.MenuUrl} className="nav-link">
+                              {multi.MenuName}
+                            </Link>
+                          </li>
+                        );
+                      }else if(ap.AuthorizedActions.I && multi.app === "I"){
+                        return (
+                          <li className="nav-item" key={idx}>
+                            <Link to={multi.MenuUrl} className="nav-link">
+                              {multi.MenuName}
+                            </Link>
+                          </li>
+                        );
+                      }
+                      return ""
+                    })}
+                  </ul>
+                </li>
+              )}
+            </>
+          );
+        }
+        return "";
+      });
+    });
   });
-  return userData.userid !== ""  ? (
+
+  // const navbarDrawer = appList.map((data, id) => {
+  //   return (
+  //     <div key={id}>
+  //       {data.type === "single" ? (
+  //         <li className="nav-item">
+  //           <Link to={data.MenuUrl} className="nav-link">
+  //             {data.MenuName}
+  //           </Link>{" "}
+  //         </li>
+  //       ) : (
+  //         <li key={id} className="nav-item dropdown">
+  //           <Link to={data.MenuUrl} className="nav-link">
+  //             {data.MenuName}
+  //           </Link>
+  //           <ul className="navbar-nav bg-dark">
+  //             {" "}
+  //             {data.mutiVal?.map((multi, idx) => {
+  //               return (
+  //                 <li className="nav-item" key={idx}>
+  //                   <Link to={multi.MenuUrl} className="nav-link">
+  //                     {multi.MenuName}
+  //                   </Link>
+  //                 </li>
+  //               );
+  //             })}
+  //           </ul>
+  //         </li>
+  //       )}
+  //     </div>
+  //   );
+  // });
+
+  // const ADMIN = userData?.roles.map((e, idx) => {
+  //   if (e.role === "ADMIN") {
+  //     return (
+  //       <li className="nav-items" key={idx}>
+  //         <Link to="/manageLinks" className="nav-link">
+  //           Manage Routes
+  //         </Link>
+  //       </li>
+  //     );
+  //   }
+  //   return "";
+  // });
+  return userData.userid !== "" ? (
     <>
-      {navbarDrawer}
-      {ADMIN}
+      {/* {navbarDrawer} */}
+      {appData}
       <li className="nav-item text-white sign-in dropdown">
         <Link to="#" className="nav-link">
           {userData.username}
@@ -121,11 +201,7 @@ export default function Navbar(props: applicationProps) {
 
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul key={2} className="navbar-nav mr-auto">
-          {
-            navbarDetails(
-              props.userData,
-            ) as ReactNode
-          }
+          {navbarDetails(props.userData) as ReactNode}
         </ul>
       </div>
     </nav>

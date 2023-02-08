@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBTabs,
@@ -19,10 +19,17 @@ type messageType = {
   message: string;
 };
 
-export default function Login(props:{
-  setUser: any;
-}) {
-  const navigate = useNavigate();
+export default function Login(props: { setUser: any; title: string }) {
+  const redirect = useNavigate();
+  useEffect(() => {
+    console.log(process.env.REACT_APP_SSO_USER_ID)
+    if((process.env.REACT_APP_AUTO_LOGIN as string)=== "true"){
+      setUsername(parseInt(process.env.REACT_APP_SSO_USER_ID as string));
+      setPassword(process.env.REACT_APP_SSO_USER_PASSWORD as string);
+      handleRegisterLogin("tab1");
+    }
+    document.title = props.title;
+  });
   const [justifyActive, setJustifyActive] = useState("tab1");
   const [username, setUsername] = useState(0);
   const [password, setPassword] = useState("");
@@ -197,9 +204,9 @@ export default function Login(props:{
           message: response?.message,
         });
       } else {
-        localStorage.setItem('user', JSON.stringify(response))
-        props.setUser(response)
-        navigate("/");
+        localStorage.setItem("user", JSON.stringify(response));
+        props.setUser(response);
+        redirect("/");
       }
     } else {
       const registerForm = {
