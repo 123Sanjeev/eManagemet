@@ -3,6 +3,8 @@ import { backendURL } from "../globals/global_variable";
 import "../../sytles/viewblueprint.css";
 import "../../sytles/global.css";
 import { useNavigate } from "react-router-dom";
+import { user } from "../Dashboard";
+import { HasCapabilities } from "../../authorization/hasCapabilities";
 
 export type blueprintType = {
   blueprintid: number;
@@ -14,7 +16,7 @@ export type blueprintType = {
   totalMarks: string;
 };
 
-export default function ViewBlueprint(props:{title:string}) {
+export default function ViewBlueprint(props:{title:string, user:user}) {
   const redirect = useNavigate();
   useEffect(()=>{
     document.title=props.title

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaRoute } from "react-icons/fa";
 import { user } from "../Dashboard";
+import RouteWF from "../../wf/RouteWF";
 export default function UpdateBlueprint(props: { title: string, user: user }) {
   const redirect = useNavigate();
   const location = useLocation();
@@ -28,6 +29,7 @@ export default function UpdateBlueprint(props: { title: string, user: user }) {
     totalMarks: 0,
   });
   const [selectedMarks, setSelectedMarks] = useState<number>(0);
+  const [routeWf, setRouteWf] = useState(false);
 
   useEffect(() => {
     document.title = props.title;
@@ -38,6 +40,7 @@ export default function UpdateBlueprint(props: { title: string, user: user }) {
   return (
     <>
       <div className="container ">
+        {(routeWf) ? <RouteWF app={"BP"}  to={"CO"} setRouteWf={setRouteWf} user={user} currentRole={"UEB"}/> : ""}
         <input
           type="button"
           value="Back"
@@ -59,7 +62,7 @@ export default function UpdateBlueprint(props: { title: string, user: user }) {
           title="Route Workflow"
           onClick={() => {
             console.table(user.roles)
-            alert("Routing workflow with role: " + user.roles[0].role)
+            setRouteWf(true)
           }}
         />
         <h1>Update Blueprint ({blueprint.title})</h1>

@@ -1,11 +1,4 @@
-import React from 'react'
-import { useLocation } from 'react-router-dom';
-export default function Profile(props:any) {
-    const location = useLocation()
-    const userData = location.state
-  return (
-    <div>{
-            JSON.stringify(userData).toString()
-        }</div>
-  )
+import { user } from "../Dashboard";
+export default function Profile(props: { user: user }) {
+  return <div className="container">{JSON.stringify(props.user)}</div>;
 }

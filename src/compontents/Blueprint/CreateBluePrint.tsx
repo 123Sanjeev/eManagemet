@@ -3,8 +3,9 @@ import $ from "jquery";
 import { useEffect, useState } from "react";
 import { backendURL } from "../globals/global_variable";
 import PopUpComponent from "../globals/PopUpComponent";
+import { user } from "../Dashboard";
 
-export default function CreateBluePrint(props: { title: string }) {
+export default function CreateBluePrint(props: { title: string , user:user}) {
   useEffect(() => {
     document.title = props.title;
   });
