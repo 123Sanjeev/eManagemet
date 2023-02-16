@@ -1,15 +1,19 @@
 import { useParams } from "react-router-dom";
 import "../../sytles/Questions.css";
 import AddQuestion from "./AddQuestion";
+import EditQuestion from "./EditQuestion";
 import ViewQuestions from "./ViewQuestions";
-
+import db from  '../../api/dbqueries'
+import { useEffect, useState } from "react";
+import { user } from "../Dashboard";
 export type QuestionForm = {
+  seq_id : number;
   option: string;
   suboption: string;
   category: string;
   subcategory: string;
   questiondsc: string;
-  tfanswer: string;
+  tfanswer: boolean;
   mcqanswer: string;
   fibanswer: string;
   tfoptions: boolean[];
@@ -26,12 +30,28 @@ export type ViewQuestion = {
   QUESTIONDESC: string;
 };
 
-export default function Question() {
-  const { action } = useParams();
+export default function Question(props:{title:string, user: user}) {
+  const { action ,id} = useParams();
+  useEffect(()=>{
+    document.title= action +" " +  props.title
+  })
+  const [qid , setQid] = useState(0);
+  async function initQuestionid() {
+    const newQuestionid = await db.initQuestion();
+    setQid(parseInt(newQuestionid));
+  }
+
+
+
   if (action?.toUpperCase() === "ADD") {
-    return <AddQuestion />;
+    initQuestionid()
+    return <AddQuestion isEditMode={false} id={0} questionid={qid}/>;
   } else if (action?.toUpperCase() === "VIEW") {
     return <ViewQuestions />;
+  }else if(action?.toUpperCase() === "EDIT"){
+    return <EditQuestion id={parseInt(id as string) } user={props.user} />;
   }
   return <>Question</>
+
+
 }

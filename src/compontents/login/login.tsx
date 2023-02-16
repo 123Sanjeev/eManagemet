@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MDBContainer,
   MDBTabs,
@@ -19,11 +19,17 @@ type messageType = {
   message: string;
 };
 
-export default function Login(props: {
-  setLoginStatus: any;
-  setUserData: any;
-}) {
-  const navigate = useNavigate();
+export default function Login(props: { setUser: any; title: string }) {
+  const redirect = useNavigate();
+  useEffect(() => {
+    console.log(process.env.REACT_APP_SSO_USER_ID)
+    if((process.env.REACT_APP_AUTO_LOGIN as string)=== "true"){
+      setUsername(parseInt(process.env.REACT_APP_SSO_USER_ID as string));
+      setPassword(process.env.REACT_APP_SSO_USER_PASSWORD as string);
+      handleRegisterLogin("tab1");
+    }
+    document.title = props.title;
+  });
   const [justifyActive, setJustifyActive] = useState("tab1");
   const [username, setUsername] = useState(0);
   const [password, setPassword] = useState("");
@@ -182,7 +188,6 @@ export default function Login(props: {
     </div>
   );
   async function handleRegisterLogin(option: string) {
-    console.log(option);
     if (option === "tab1") {
       const data = {
         userId: username,
@@ -193,21 +198,15 @@ export default function Login(props: {
       const response = await db.login(
         data as { userId: number; password: string; loginkey: string }
       );
-
-      console.log(response);
-      debugger;
       if (response?.type === "error") {
-        debugger;
         setErrorCode({
           type: response?.type,
           message: response?.message,
         });
       } else {
-        sessionStorage.setItem("userid", data.userId.toString());
-        sessionStorage.setItem("sessionkey", response.loginkey);
-        props.setLoginStatus(true);
-        props.setUserData(response);
-        navigate("/viewblueprint");
+        localStorage.setItem("user", JSON.stringify(response));
+        props.setUser(response);
+        redirect("/");
       }
     } else {
       const registerForm = {
@@ -216,9 +215,8 @@ export default function Login(props: {
         password: password,
         location: location,
       };
-      console.log(registerForm);
+
       const user = await db.register(registerForm);
-      console.log(user);
     }
 
     //  window.location.reload();

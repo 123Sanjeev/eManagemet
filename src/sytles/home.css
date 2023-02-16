@@ -7,10 +7,51 @@
     border: 1px solid black;
     margin: 0 auto;
 }
+.home{
+    padding-top: 40px;
+    height: 100vh;
+}
+.home .welcome{
+    height: 40px!important;
+}
+.welcomheader{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding:10px;
+    justify-content: center;
+    align-items: center;
+}
+.profile {
+    position: relative;
+    right: 60px;
+    width: 100px;
+}
+.profile svg{
+    width: 40px;
+    height: 40px;
+    background-color: black;
+    border-radius: 10px;
+    color:white;
+    cursor: pointer;
+}
 
-.empCount{
-    background-color: red;
-    width:200px;
-    height: 200px;
+.profile svg:hover{
+    background-color: white;
+    color: black;
     border: 1px solid black;
+}
+.profileLinks{
+    position: absolute;
+    left:-20px;
+    z-index: 9999;
+}
+.profileLinks a{
+    border: 1px solid white;
+    border-radius: 2px;
+    padding: 5px;
+    background-color: grey;
+}
+.profileLinks a:hover{
+    background-color: black!important;
+    color:white;
 }
