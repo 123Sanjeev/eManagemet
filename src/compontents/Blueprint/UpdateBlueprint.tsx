@@ -3,11 +3,25 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { FaRoute } from "react-icons/fa";
 import { user } from "../Dashboard";
 import RouteWF from "../../wf/RouteWF";
-export default function UpdateBlueprint(props: { title: string, user: user }) {
+import routeWFDB from "../../api/routeWFDB";
+export type wfResDataType = {
+  app:string;
+  pendingWith:string;
+  routedTo:string;
+}
+type roleType ={
+  UEB:string;
+  CI:string;
+}
+const roleListLogic:roleType= {
+    UEB : "CI",
+    CI : "OIC UEB"
+}
+export default function UpdateBlueprint(props: { title: string; user: user }) {
   const redirect = useNavigate();
   const location = useLocation();
   const { bpid } = useParams();
-  const {user} = props
+  const { user } = props;
   console.log("Blueprint id in update blueprint : " + bpid);
   const [blueprint, setBlueprint] = useState<{
     blueprintid: number;
@@ -28,19 +42,46 @@ export default function UpdateBlueprint(props: { title: string, user: user }) {
     status: "",
     totalMarks: 0,
   });
+  const [wfState , setWFState] = useState<wfResDataType>({
+    app:"BP",
+    pendingWith:"UEB",
+    routedTo:"CI",
+  });
   const [selectedMarks, setSelectedMarks] = useState<number>(0);
   const [routeWf, setRouteWf] = useState(false);
 
   useEffect(() => {
     document.title = props.title;
-    console.log("Location data: ", location.state);
     setBlueprint(location.state);
+    handleWFRecordCheck()
   }, [location, props.title]);
 
+
+  async function handleWFRecordCheck(){
+    const wfRecord = await routeWFDB.checkWF(""+blueprint.blueprintid)
+    if(wfRecord.pendingWith==="UEB"){
+      wfRecord.routedTo = roleListLogic.UEB
+    }else if(wfRecord.pendingWith==="CI"){
+      wfRecord.routedTo= roleListLogic.CI
+    }
+    setWFState(wfRecord)
+  }
   return (
-    <>
-      <div className="container ">
-        {(routeWf) ? <RouteWF app={"BP"}  to={"CO"} setRouteWf={setRouteWf} user={user} currentRole={"UEB"}/> : ""}
+    <div className="container-fluid">
+      <div className="container">
+        {routeWf ? (
+          <RouteWF
+            app={wfState.app}
+            to={wfState.routedTo}
+            setRouteWf={setRouteWf}
+            user={user}
+            currentRole={wfState.pendingWith}
+            ownerid ={""+blueprint.blueprintid}
+            setWFState={setWFState}
+          />
+        ) : (
+          ""
+        )}
         <input
           type="button"
           value="Back"
@@ -61,8 +102,8 @@ export default function UpdateBlueprint(props: { title: string, user: user }) {
           }}
           title="Route Workflow"
           onClick={() => {
-            console.table(user.roles)
-            setRouteWf(true)
+            console.table(user.roles);
+            setRouteWf(true);
           }}
         />
         <h1>Update Blueprint ({blueprint.title})</h1>
@@ -192,7 +233,7 @@ export default function UpdateBlueprint(props: { title: string, user: user }) {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 
   function ObjectiveMarksSelectionComponent() {

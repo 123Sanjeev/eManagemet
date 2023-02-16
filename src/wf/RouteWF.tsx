@@ -3,7 +3,7 @@ import { user } from "../compontents/Dashboard";
 import "../sytles/WF/routeWF.css";
 import RouteWFDB from "../api/routeWFDB";
 
-export default function RouteWF(props: { app: string; to: string , setRouteWf:Function, user : user, currentRole:string}) {
+export default function RouteWF(props: { app: string; to: string , setRouteWf:Function, user : user, currentRole:string, ownerid: string, setWFState : Function}) {
     const [sendTo, setSendTo]  = useState<string>("");
     const [memo, setMemo] = useState<string>("");
   useEffect(() => {
@@ -52,20 +52,17 @@ export default function RouteWF(props: { app: string; to: string , setRouteWf:Fu
     </div>
   );
   async function handleRouteWF(){
-    const app = props.app
-    const routedby = props.user.userid
-    const role = props.currentRole
-    
+    const {app, currentRole,user,ownerid} = props;
     const routeWFData = {
         app,
-        routedby,
-        role,
+        routedby: user.userid,
+        role:sendTo,
         memo,
-        routedTo : sendTo
+        routedTo : sendTo,
+        ownerid
     }
-    console.log(routeWFData)
-    
-    console.log(await RouteWFDB.routeWF(routeWFData))
+    const responseData = await RouteWFDB.routeWF(routeWFData)
+    props.setWFState(responseData)
     handleCancel()
   }
   function handleCancel(){
