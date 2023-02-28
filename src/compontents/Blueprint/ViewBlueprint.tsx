@@ -5,6 +5,7 @@ import "../../sytles/global.css";
 import { useNavigate } from "react-router-dom";
 import { user } from "../Dashboard";
 import { HasCapabilities } from "../../authorization/hasCapabilities";
+import Notifications from "../notfication/Notifications";
 
 export type blueprintType = {
   blueprintid: number;
@@ -16,12 +17,16 @@ export type blueprintType = {
   totalMarks: string;
 };
 
-export default function ViewBlueprint(props:{title:string, user:user}) {
+export default function ViewBlueprint(props: { title: string; user: user }) {
   const redirect = useNavigate();
-  useEffect(()=>{
-    document.title=props.title
-  })
+  useEffect(() => {
+    document.title = props.title;
+  });
   const [blueprintdata, setBlueprintdata] = useState<blueprintType>();
+  const [popUps, setPopUps] = useState<{
+    type:string,
+    message:string
+  }>();
   async function handleLoadBlueprintData(
     event: React.FormEvent<HTMLFormElement>
   ) {
@@ -45,35 +50,48 @@ export default function ViewBlueprint(props:{title:string, user:user}) {
     });
 
     const bpdata = await response.json();
-    console.log(bpdata)
-    const bpViewData = bpdata.map((bp: blueprintType, idx: number) => {
-      return (
-        <div className="row " key={idx}>
-          <div className="col border p-2 col-2">{idx + 1}</div>
-          <div
-            className="col border p-2  text-primary"
-            onClick={(e) => {
-              console.log(`View blueprint data for ${bp.blueprintid} and data is ${ Object.keys(bp) }`)
-              redirect("/viewBlueprint/" + bp.blueprintid, {state : bp});
-            }}
-            id="blueprintid"
-          >
-            {bp.blueprintid}
+    if (bpdata.requeststatus === "NORECORD") {
+      setPopUps({
+        type:"message",
+        message:"No Records Found"
+      })
+    }else{
+      const bpViewData = bpdata.map((bp: blueprintType, idx: number) => {
+        return (
+          <div className="row " key={idx}>
+            <div className="col border p-2 col-2">{idx + 1}</div>
+            <div
+              className="col border p-2  text-primary"
+              onClick={(e) => {
+                console.log(
+                  `View blueprint data for ${
+                    bp.blueprintid
+                  } and data is ${Object.keys(bp)}`
+                );
+                redirect("/viewBlueprint/" + bp.blueprintid, { state: bp });
+              }}
+              id="blueprintid"
+            >
+              {bp.blueprintid}
+            </div>
+            <div className="col border p-2">{bp.mastercoursename}</div>
+            <div className="col border p-2">{bp.subject}</div>
+            <div className="col border p-2">{bp.term}</div>
+            <div className="col border p-2">{bp.option}</div>
+            <div className="col border p-2">{bp.status}</div>
           </div>
-          <div className="col border p-2">{bp.mastercoursename}</div>
-          <div className="col border p-2">{bp.subject}</div>
-          <div className="col border p-2">{bp.term}</div>
-          <div className="col border p-2">{bp.option}</div>
-          <div className="col border p-2">{bp.status}</div>
-        </div>
-      );
-    });
-    setBlueprintdata(bpViewData);
+        );
+      });
+      setBlueprintdata(bpViewData);
+    }
   }
   return <div className="container-fluid">{viewBlueprintComponent()}</div>;
   function viewBlueprintComponent() {
     return (
       <>
+        {
+          (popUps) ? <Notifications type={popUps.type} message={popUps.message} state={setPopUps}/> : ""
+        }
         <h1>View Blueprint</h1>
         <hr />
         <div className="container">

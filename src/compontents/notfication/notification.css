@@ -1,6 +1,15 @@
 .notification{
     position:absolute;
-    right : 20px;
-    top:20px;
-    height: 45px;
+    top:50%;
+    left:50%;
+    transform: translate(-50%,-50%);
+    width: 500px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    box-shadow: 10px 10px 20px grey;
+    z-index: 9999999;
 }

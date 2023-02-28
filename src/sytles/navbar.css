@@ -1,11 +1,12 @@
 :root{
     --navbgcolor :rgb(245, 245, 245); 
+    --globalWidth:250px;
 }
 
 .navbar{
     position: fixed;
     height: 100vh;
-    width: 300px;
+    width: var(--globalWidth);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,7 +20,7 @@
     background-color: #7878f1!important;
     left:0px;
     top:0px;
-    width: 300px;
+    width: var(--globalWidth);
     height: 100px;
     text-align: center;
     display: flex;
@@ -32,7 +33,7 @@
 .nav-links{
     position: absolute;
     top:100px;
-    width: 300px;
+    width: var(--globalWidth);
 }
 .nav-links ul{
     width: 100%;
@@ -80,18 +81,22 @@ svg {
 .dropdown{
     color:white;
     position: relative;
+    
 }
 
 .dropdown>ul{
     position: absolute;
-    left :270px;
+    left :200px;
     top:23px;
     display: none;
-    width: 300px;
+    width: calc(var(--globalWidth));
     background-color: var(--navbgcolor)!important;
+    box-shadow: 4px 4px 30px white;
 }
-.dropdown>ul li{
 
+.dropdown>ul li{
+    border: 1px solid white;
+    border-radius: 2px;
 }
 .dropdown>ul li a{
     color:black!important;

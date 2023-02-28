@@ -51,7 +51,7 @@ export default function Login(props: { setUser: any; title: string }) {
   return (
     <div className="container w-75">
       {errorCode.type !== "" ? (
-        <Notifications type={errorCode.type} message={errorCode.message} />
+        <Notifications type={errorCode.type} message={errorCode.message} state={setErrorCode} />
       ) : (
         ""
       )}

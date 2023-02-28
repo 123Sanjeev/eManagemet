@@ -1,4 +1,4 @@
-import { MouseEvent, ReactHTMLElement, ReactNode, useState } from "react";
+import { MouseEvent, ReactHTMLElement, ReactNode, useEffect, useState } from "react";
 import appList from "./private/navbar.elements";
 import "../sytles/navbar.css";
 import { Link } from "react-router-dom";
@@ -68,16 +68,20 @@ const navbarDetails = function (userData: user) {
       }
       return appList.map((nav, idx) => {
         if (nav.app === e) {
+          console.log(nav)
           return (
             <>
               {nav.type === "single" ? (
-                <li className="nav-item">
-                  <Link to={nav.MenuUrl} key={idx} className="nav-link">
+                <li className="nav-item" key={idx}>
+                  <Link to={nav.MenuUrl} className="nav-link">
                     <nav.icon />
                     {nav.MenuName}
                   </Link>
                 </li>
-              ) : (
+              ) :
+              
+              (
+                
                 <li key={idx} className="nav-item dropdown">
                   <Link to={nav.MenuUrl} className="nav-link">
                     <nav.icon />
@@ -90,6 +94,7 @@ const navbarDetails = function (userData: user) {
                         return (
                           <li className="nav-item" key={idx}>
                             <Link to={multi.MenuUrl} className="nav-link">
+                              <multi.icon />
                               {multi.MenuName}
                             </Link>
                           </li>
@@ -98,6 +103,7 @@ const navbarDetails = function (userData: user) {
                         return (
                           <li className="nav-item" key={idx}>
                             <Link to={multi.MenuUrl} className="nav-link">
+                              <multi.icon />
                               {multi.MenuName}
                             </Link>
                           </li>
@@ -119,6 +125,7 @@ const navbarDetails = function (userData: user) {
 };
 
 export default function Navbar(props: applicationProps) {
+
 
   return (
     <nav className={`navbar`} >

@@ -1,21 +1,27 @@
-import './notification.css'
+import Draggable from "react-draggable";
+import "./notification.css";
 type NotificationsType = {
-    "type" : string,
-    "message" : string
-}
+  type: string;
+  message: string;
+  state: Function;
+};
 
-export default function Notifications(props:NotificationsType) {
+export default function Notifications(props: NotificationsType) {
   return (
-   
-    <div className="container w-25 position-absolute rounded border notification text-white" style={
-        (props.type === "error") ? {
-            backgroundColor : "red"
-        } :  (props.type === "message") ?{backgroundColor : "green"} : {
-            backgroundColor : "black"
-        } 
-    }>
-        {props.message}
-    </div>
-
-  )
+    <Draggable>
+      <div className="rounded border notification">
+        <div>{props.message}</div>
+        <div>
+          <button
+            className="btn btn-danger"
+            onClick={() => {
+              props.state(false);
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </Draggable>
+  );
 }
